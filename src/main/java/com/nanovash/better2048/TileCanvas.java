@@ -1,27 +1,16 @@
-package com.github.thesupermariobro.better2048;
+package com.nanovash.better2048;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
-
-@SuppressWarnings("serial")
 public class TileCanvas extends JPanel implements ComponentListener, MouseListener, KeyListener {
 
 	static int canvasLength = 4;
@@ -116,7 +105,6 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		add(label);
 		layout.putConstraint(SpringLayout.NORTH, label, 0, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, label, 0, SpringLayout.WEST, this);
-		 ();
 		revalidate();
 	}
 

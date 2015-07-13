@@ -1,4 +1,4 @@
-package com.github.thesupermariobro.better2048;
+package com.nanovash.better2048;
 
 import java.awt.EventQueue;
 import java.awt.Color;
@@ -33,7 +33,6 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 
-@SuppressWarnings("serial")
 public class Better2048 extends JFrame implements ComponentListener, ActionListener {
 
 	static Better2048 frame;

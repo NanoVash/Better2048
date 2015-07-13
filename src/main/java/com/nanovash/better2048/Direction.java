@@ -1,8 +1,7 @@
-package com.github.thesupermariobro.better2048;
-
-import java.util.List;
+package com.nanovash.better2048;
 
 import javax.swing.SpringLayout;
+import java.util.List;
 
 public enum Direction {
 	

@@ -1,13 +1,11 @@
-package com.github.thesupermariobro.better2048;
+package com.nanovash.better2048;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-
-@SuppressWarnings("serial")
 public class Tile extends JLabel {
 	
 	long actualNumber = 0;
