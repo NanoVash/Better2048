@@ -74,7 +74,7 @@ public enum Direction {
     }
 
     public int getNeededSize() {
-        if(!shouldBeBigger)
+        if(!reversed)
             return Better2048.game.getPreferredSize().height;
         else
             return Better2048.game.getPreferredSize().width;
