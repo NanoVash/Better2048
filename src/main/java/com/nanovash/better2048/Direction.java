@@ -5,26 +5,24 @@ import java.util.List;
 
 public enum Direction {
 
-    UP(true, true, false, true,TileCanvas.verticLocs, TileCanvas.horizLocs, SpringLayout.NORTH),
-    DOWN(false, false, false, true,TileCanvas.verticLocs, TileCanvas.horizLocs, SpringLayout.NORTH),
-    LEFT(true, true, true, false,TileCanvas.horizLocs, TileCanvas.verticLocs, SpringLayout.WEST),
-    RIGHT(false, false, true, false,TileCanvas.horizLocs, TileCanvas.verticLocs, SpringLayout.WEST);
+    UP(true, true, false, TileCanvas.verticLocs, TileCanvas.horizLocs, SpringLayout.NORTH),
+    DOWN(false, false, false, TileCanvas.verticLocs, TileCanvas.horizLocs, SpringLayout.NORTH),
+    LEFT(true, true, true, TileCanvas.horizLocs, TileCanvas.verticLocs, SpringLayout.WEST),
+    RIGHT(false, false, true, TileCanvas.horizLocs, TileCanvas.verticLocs, SpringLayout.WEST);
 
     boolean loopArg1;
     boolean shouldBeBigger;
     boolean reversed;
-    boolean height;
     List<List<Tile>> mainList;
     List<List<Tile>> sideList;
     String direction;
 
-    private Direction(boolean loopArg1, boolean shouldBeBigger, boolean reversed, boolean height,List<List<Tile>> mainList, List<List<Tile>> sideList, String direction) {
+    Direction(boolean loopArg1, boolean shouldBeBigger, boolean reversed, List<List<Tile>> mainList, List<List<Tile>> sideList, String direction) {
         this.loopArg1 = loopArg1;
         this.shouldBeBigger = shouldBeBigger;
         this.reversed = reversed;
         this.mainList = mainList;
         this.sideList = sideList;
-        this.height = height;
         this.direction = direction;
     }
 
@@ -50,10 +48,7 @@ public enum Direction {
     }
 
     public int firstLoopUpdate(int i) {
-        if(shouldBeBigger)
-            return i + 1;
-        else
-            return i - 1;
+        return i + (shouldBeBigger ? 1 : -1);
     }
 
     public boolean secondLoopContinue(int i) {
@@ -64,10 +59,7 @@ public enum Direction {
     }
 
     public int secondLoopUpdate(int i) {
-        if(shouldBeBigger)
-            return i - 1;
-        else
-            return i + 1;
+        return i + (shouldBeBigger ? -1 : 1);
     }
 
     public void place(Tile t, int x, int y) {
@@ -78,14 +70,11 @@ public enum Direction {
     }
 
     public int positionChange(int where) {
-        if(shouldBeBigger)
-            return where - 1;
-        else
-            return where + 1;
+        return where + (shouldBeBigger ? -1 : 1);
     }
 
     public int getNeededSize() {
-        if(height)
+        if(!shouldBeBigger)
             return Better2048.game.getPreferredSize().height;
         else
             return Better2048.game.getPreferredSize().width;

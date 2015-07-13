@@ -24,6 +24,7 @@ public class Better2048 extends JFrame implements ComponentListener, ActionListe
     static JComboBox<Object> comboBox;
     static JButton restartGame;
     static Properties props;
+    static File saveFile;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -44,7 +45,6 @@ public class Better2048 extends JFrame implements ComponentListener, ActionListe
         setSize(828, 700);
         setMinimumSize(new Dimension(700, 700));
         addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent event) {
                 save();
@@ -231,12 +231,12 @@ public class Better2048 extends JFrame implements ComponentListener, ActionListe
             }
         }.start();
         props = new Properties();
-        File f = new File(System.getenv("Appdata") + File.separator + ".better2048");
+        File f = new File(System.getenv("Appdata"), ".better2048");
         if(!f.exists())
             f.mkdirs();
-        f = new File(f + File.separator + "better2048.properties");
-        if(!f.exists())
-            f.createNewFile();
+        saveFile = new File(f, "better2048.properties");
+        if(!saveFile.exists())
+            saveFile.createNewFile();
         load();
     }
 
@@ -247,7 +247,7 @@ public class Better2048 extends JFrame implements ComponentListener, ActionListe
 
     private void save() {
         try {
-            OutputStream os = new FileOutputStream(System.getenv("Appdata") + File.separator + ".better2048" + File.separator + "better2048.properties");
+            OutputStream os = new FileOutputStream(saveFile);
             props.setProperty("highScore" + TileCanvas.canvasLength, highScore.getText());
             props.setProperty("highestTile" + TileCanvas.canvasLength, highestTile.getText());
             props.store(os, "Better2048's highscore saving file");
@@ -259,7 +259,7 @@ public class Better2048 extends JFrame implements ComponentListener, ActionListe
 
     private void load() {
         try {
-            InputStream is = new FileInputStream(System.getenv("Appdata") + File.separator + ".better2048" + File.separator + "better2048.properties");
+            InputStream is = new FileInputStream(saveFile);
             props.load(is);
             is.close();
             if(props.getProperty("highScore" + TileCanvas.canvasLength) != null && props.getProperty("highestTile" + TileCanvas.canvasLength) != null) {

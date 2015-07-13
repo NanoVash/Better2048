@@ -162,14 +162,13 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 								break;
 							}
 						}
-						else if(d.mainList.get(i).get(k) == null) {}
-						else if(d.mainList.get(i).get(k).getActualNumber() == t.getActualNumber() && !d.mainList.get(i).get(k).alreadyConnected) {
+						else if(d.mainList.get(i).get(k) != null && d.mainList.get(i).get(k).getActualNumber() == t.getActualNumber() && !d.mainList.get(i).get(k).alreadyConnected) {
 							t.heading = new Point(i, k);
 							break;
 						}
-						else {
+						else if (d.mainList.get(i).get(k) != null) {
 							t.heading = new Point(i, d.firstLoopUpdate(k));
-							break;
+                            break;
 						}
 					}
 					int to = (d.getNeededSize() / canvasLength) * t.heading.y;
@@ -198,8 +197,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 							if(where == to) {
 								if(copy == null)
 									d.place(t, t.heading.x, t.heading.y);
-								else if(t.equals(copy)) {}
-								else if(t.shouldConnect) {
+								else if(!t.equals(copy) && t.shouldConnect) {
 									copy.setShownNumber(copy.getActualNumber());
 									if(!alreadyWon && copy.getShownNumber() == 2048) {
 										isShowingWin = true;
