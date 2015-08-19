@@ -1,27 +1,16 @@
-package com.github.thesupermariobro.better2048;
+package com.nanovash.better2048;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
-
-@SuppressWarnings("serial")
 public class TileCanvas extends JPanel implements ComponentListener, MouseListener, KeyListener {
 
 	static int canvasLength = 4;
@@ -37,7 +26,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 	static Dimension lastSize;
 	static double verticSpeed;
 	static double horizSpeed;
-	
+
 	static HashMap<Long, Color> tileColors = new HashMap<Long, Color>() {{
 		put(2L, Color.decode("#D1ECFF")); //beginning of light blue colors
 		put(4L, Color.decode("#B2E0FF"));
@@ -47,11 +36,11 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		put(64L, Color.decode("#19A3FF"));
 		put(128L, Color.decode("#94FF94")); //beginning of light green color to darker green
 		put(256L, Color.decode("#66FF66"));
-        put(512L, Color.decode("#00CC00"));
+		put(512L, Color.decode("#00CC00"));
 		put(1024L, Color.decode("#00FFCC"));
 		put(2048L, Color.decode("#00CCA3"));
 	}};
-	
+
 	public TileCanvas() {
 		for(int i = 0; i < canvasLength; i++) {
 			List<Tile> temp = new ArrayList<>();
@@ -67,7 +56,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		setBackground(Color.LIGHT_GRAY);
 		setFocusable(true);
 	}
-	
+
 	public static void createNewTile() {
 		Random r = new Random();
 		/*A list of points is used just to keep track of both TileCanvas.verticLocs and TileCanvas.horizLocs
@@ -85,7 +74,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 				Better2048.highestTile.setText(Long.toString(t.getShownNumber()));
 		}
 	}
-	
+
 	public void positionTile(Tile t, int row, int position) {
 		if(getPreferredSize().equals(new Dimension(0, 0)))
 			setPreferredSize(new Dimension(Better2048.frame.getSize().width - 164, Better2048.frame.getSize().height - 36));
@@ -105,7 +94,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 			registerLabel(winLabel, "Win Font", new Color(100, 100, 200, 123));
 		}
 	}
-	
+
 	private void registerLabel(JLabel label, String font, Color color) {
 		label.setFont(new Font(font, Font.BOLD, 20));
 		label.setForeground(Color.WHITE);
@@ -116,14 +105,13 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		add(label);
 		layout.putConstraint(SpringLayout.NORTH, label, 0, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.WEST, label, 0, SpringLayout.WEST, this);
-		 ();
 		revalidate();
 	}
 
 	private int calcFont(Tile t) {
 		return 70 - (5 * t.getText().length()) <= 0 ? 5 : 70 - (5 * t.getText().length());
 	}
-	
+
 	public void checkGameOver() {
 		isGameOver = true;
 		vertic_loop:
@@ -157,14 +145,14 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		if(isGameOver)
 			lossLabel.setVisible(true);
 	}
-	
+
 	public void move(final Direction d) {
 		for(int i = d.getArg1(); d.firstLoopContinue(i); i = d.firstLoopUpdate(i))
 			for(int j = d.getArg1(); d.firstLoopContinue(j); j = d.firstLoopUpdate(j))
 				if(j != d.getArg1() && d.mainList.get(i).get(j) != null) {
 					final Tile t = d.mainList.get(i).get(j);
 					for(int k = d.secondLoopUpdate(j); d.secondLoopContinue(k); k = d.secondLoopUpdate(k)) {
-						if(k == d.getArg1()) { 
+						if(k == d.getArg1()) {
 							if(d.mainList.get(i).get(k) == null || d.mainList.get(i).get(k).getActualNumber() == t.getActualNumber() && !d.mainList.get(i).get(k).alreadyConnected) {
 								t.heading = new Point(i, k);
 								break;
@@ -174,14 +162,13 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 								break;
 							}
 						}
-						else if(d.mainList.get(i).get(k) == null) {}
-						else if(d.mainList.get(i).get(k).getActualNumber() == t.getActualNumber() && !d.mainList.get(i).get(k).alreadyConnected) {
+						else if(d.mainList.get(i).get(k) != null && d.mainList.get(i).get(k).getActualNumber() == t.getActualNumber() && !d.mainList.get(i).get(k).alreadyConnected) {
 							t.heading = new Point(i, k);
 							break;
 						}
-						else {
+						else if (d.mainList.get(i).get(k) != null) {
 							t.heading = new Point(i, d.firstLoopUpdate(k));
-							break;
+                            break;
 						}
 					}
 					int to = (d.getNeededSize() / canvasLength) * t.heading.y;
@@ -210,8 +197,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 							if(where == to) {
 								if(copy == null)
 									d.place(t, t.heading.x, t.heading.y);
-								else if(t.equals(copy)) {}
-								else if(t.shouldConnect) {
+								else if(!t.equals(copy) && t.shouldConnect) {
 									copy.setShownNumber(copy.getActualNumber());
 									if(!alreadyWon && copy.getShownNumber() == 2048) {
 										isShowingWin = true;
@@ -243,7 +229,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 												if(verticLocs.get(i).get(j) != null && verticLocs.get(i).get(j).alreadyConnected)
 													verticLocs.get(i).get(j).alreadyConnected = false;
 										checkGameOver();
-										if(isShowingWin && !isGameOver) 
+										if(isShowingWin && !isGameOver)
 											winLabel.setVisible(true);
 									}
 								}
@@ -264,7 +250,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 					}, 0, (long) (d.equals(Direction.UP) || d.equals(Direction.DOWN) ? verticSpeed : horizSpeed), TimeUnit.MICROSECONDS);
 				}
 	}
-	
+
 	@Override
 	public void componentResized(ComponentEvent arg0) {
 		if(verticLocs.size() == 0)
@@ -280,28 +266,28 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		double i = (double) d.height / 664;
 		double j = (double) d.width / 664;
 		switch(Better2048.comboBox.getSelectedItem().toString()) {
-            case "Very Fast":
-                verticSpeed = (double) 300 / i;
-                horizSpeed = (double) 300 / j;
-                break;
-            case "Fast":
-                verticSpeed = (double) 600 / i;
-                horizSpeed = (double) 600 / j;
-                break;
-            case "Normal":
-                verticSpeed = (double) 900 / i;
-                horizSpeed = (double) 900 / j;
-                break;
-            case "Slow":
-                verticSpeed = (double) 1200 / i;
-                horizSpeed = (double) 1200 / j;
-                break;
-            case "Very Slow":
-                verticSpeed = (double) 1500 / i;
-                horizSpeed = (double) 1500 / j;
+			case "Very Fast":
+				verticSpeed = (double) 300 / i;
+				horizSpeed = (double) 300 / j;
+				break;
+			case "Fast":
+				verticSpeed = (double) 600 / i;
+				horizSpeed = (double) 600 / j;
+				break;
+			case "Normal":
+				verticSpeed = (double) 900 / i;
+				horizSpeed = (double) 900 / j;
+				break;
+			case "Slow":
+				verticSpeed = (double) 1200 / i;
+				horizSpeed = (double) 1200 / j;
+				break;
+			case "Very Slow":
+				verticSpeed = (double) 1500 / i;
+				horizSpeed = (double) 1500 / j;
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		requestFocusInWindow();
@@ -310,7 +296,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 			winLabel.setVisible(false);
 		}
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent ke) {
 		if(ke.getKeyCode() == KeyEvent.VK_R) {
@@ -336,7 +322,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 		else if(ke.getKeyCode() == KeyEvent.VK_RIGHT || ke.getKeyCode() == KeyEvent.VK_D)
 			move(Direction.RIGHT);
 	}
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -364,7 +350,7 @@ public class TileCanvas extends JPanel implements ComponentListener, MouseListen
 
 	@Override
 	public void componentShown(ComponentEvent arg0) {}
-	
+
 	@Override
 	public void mouseEntered(MouseEvent arg0) {}
 
